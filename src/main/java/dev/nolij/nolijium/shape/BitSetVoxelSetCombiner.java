@@ -96,8 +96,7 @@ public class BitSetVoxelSetCombiner {
     }
 
     private static boolean inBoundsAndContains(BitSetVoxelSet shape, long[] arr, int x, int y, int z) {
-        // TODO broken compared to original method
-        if(x < 0 || y < 0 || z < 0 || x >= shape.getXSize() || y >= shape.getYSize() || z >= shape.getZSize())
+        if(x < 0 || y < 0 || z < 0 || x >= shape.sizeX || y >= shape.sizeY || z >= shape.sizeZ)
             return false;
         int idx = shape.getIndex(x, y, z);
         return (arr[idx >> 6] & (1L << idx)) != 0;

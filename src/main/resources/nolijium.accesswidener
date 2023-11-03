@@ -1,6 +1,9 @@
 accessWidener   v2  named
 
 accessible class net/minecraft/util/shape/PairList
+accessible field net/minecraft/util/shape/VoxelSet sizeX I
+accessible field net/minecraft/util/shape/VoxelSet sizeY I
+accessible field net/minecraft/util/shape/VoxelSet sizeZ I
 accessible field net/minecraft/util/shape/BitSetVoxelSet storage Ljava/util/BitSet;
 accessible method net/minecraft/util/shape/BitSetVoxelSet getIndex (III)I
 accessible field net/minecraft/util/shape/BitSetVoxelSet minX I
