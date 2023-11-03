@@ -23,6 +23,11 @@ dependencies {
 
 loom {
     accessWidenerPath = file("src/main/resources/nolijium.accesswidener")
+    runs {
+        client {
+            vmArgs.add("-XX:TieredStopAtLevel=1")
+        }
+    }
 }
 
 processResources {
