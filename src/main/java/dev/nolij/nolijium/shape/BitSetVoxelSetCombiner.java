@@ -95,6 +95,17 @@ public class BitSetVoxelSetCombiner {
         return changed;
     }
 
+    private static boolean inBoundsAndContains(BitSetVoxelSet shape, long[] arr, int x, int y, int z) {
+        // TODO broken compared to original method
+        if(x < 0 || y < 0 || z < 0)
+            return false;
+        int idx = shape.getIndex(x, y, z);
+        int arIdx = idx >> 6;
+        if(arIdx < arr.length)
+            return (arr[arIdx] & (1L << idx)) != 0;
+        return false;
+    }
+
     private boolean processZ(int x1, int x2, int y1, int y2) {
         var setY = false;
 
@@ -102,7 +113,7 @@ public class BitSetVoxelSetCombiner {
             final int z1 = zPoints.minValues[zIndex];
             final int z2 = zPoints.maxValues[zIndex];
 
-            if (function.apply(first.inBoundsAndContains(x1, y1, z1), second.inBoundsAndContains(x2, y2, z2))) {
+            if (function.apply(inBoundsAndContains(first, firstWords, x1, y1, z1), inBoundsAndContains(second, secondWords, x2, y2, z2))) {
                 //destination.storage.set(destinationIndex);
                 destinationBits[(destinationIndex >> 6)] |= (1L << destinationIndex);
                 //destination.storage.set(destinationIndex);
