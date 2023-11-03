@@ -92,8 +92,8 @@ public class BitSetVoxelSetCombiner {
             final int z2 = zPoints.maxValues[zIndex];
 
             if (function.apply(first.inBoundsAndContains(x1, y1, z1), second.inBoundsAndContains(x2, y2, z2))) {
-                //destinationBits[(destinationIndex >> 6)] |= (1L << (destinationIndex & 63L));
-                destination.storage.set(destinationIndex);
+                destinationBits[(destinationIndex >> 6)] |= (1L << destinationIndex);
+                //destination.storage.set(destinationIndex);
                 //destination.getIndex(xIndex, yIndex, zIndex));
                 destination.minZ = Math.min(destination.minZ, zIndex);
                 destination.maxZ = Math.max(destination.maxZ, zIndex);
