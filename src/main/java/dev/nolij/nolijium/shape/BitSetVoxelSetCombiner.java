@@ -40,7 +40,7 @@ public class BitSetVoxelSetCombiner {
         this.destination = bitSetVoxelSet;
     }
 
-    private static final MethodHandle WORDS;
+    private static final MethodHandle WORDS, WORDS_IN_USE, RECALCULATE_WORDS;
     private static final Unsafe UNSAFE;
 
     static {
@@ -54,6 +54,8 @@ public class BitSetVoxelSetCombiner {
             MethodHandles.Lookup hack = (MethodHandles.Lookup)UNSAFE.getObject(fieldBase, fieldOffset);
             Field f = BitSet.class.getDeclaredField("words");
             WORDS = hack.unreflectGetter(f);
+            WORDS_IN_USE = hack.unreflectSetter(BitSet.class.getDeclaredField("wordsInUse"));
+            RECALCULATE_WORDS = hack.unreflect(BitSet.class.getDeclaredMethod("recalculateWordsInUse"));
         } catch(Throwable e) {
             throw new AssertionError(e);
         }
@@ -62,6 +64,15 @@ public class BitSetVoxelSetCombiner {
     private static long[] getBitSetWords(BitSet storage) {
         try {
             return (long[])WORDS.invokeExact(storage);
+        } catch(Throwable e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    private static void finalizeShape(BitSet storage, long[] backingArray) {
+        try {
+            WORDS_IN_USE.invokeExact(storage, backingArray.length);
+            RECALCULATE_WORDS.invokeExact(storage);
         } catch(Throwable e) {
             throw new AssertionError(e);
         }
@@ -92,6 +103,7 @@ public class BitSetVoxelSetCombiner {
             final int z2 = zPoints.maxValues[zIndex];
 
             if (function.apply(first.inBoundsAndContains(x1, y1, z1), second.inBoundsAndContains(x2, y2, z2))) {
+                //destination.storage.set(destinationIndex);
                 destinationBits[(destinationIndex >> 6)] |= (1L << destinationIndex);
                 //destination.storage.set(destinationIndex);
                 //destination.getIndex(xIndex, yIndex, zIndex));
@@ -121,6 +133,8 @@ public class BitSetVoxelSetCombiner {
         destination.maxX++;
         destination.maxY++;
         destination.maxZ++;
+
+        finalizeShape(destination.storage, this.destinationBits);
 
         return destination;
     }
