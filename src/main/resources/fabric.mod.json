@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "nolijium",
+	"version": "${version}",
+	"name": "Nolijium",
+	"description": "",
+	"authors": [
+		"Nolij (@xdMatthewbx#1337)"
+	],
+	"contact": {
+		"repo": "https://github.com/Nolij/Nolijium"
+	},
+	"license": "OSL-3.0",
+	"icon": "assets/nolijium/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"dev.nolij.nolijium.client.NolijiumClient"
+		],
+		"main": [
+			"dev.nolij.nolijium.Nolijium"
+		]
+	},
+	"mixins": [
+		"nolijium.mixins.json"
+	],
+	"accessWidener": "nolijium.accesswidener",
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"fabric": "*"
+	}
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.nolij.nolijium.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BitSetVoxelSetMixin",
+    "VoxelShapesMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,13 @@
+accessWidener   v2  named
+
+accessible class net/minecraft/util/shape/PairList
+accessible field net/minecraft/util/shape/BitSetVoxelSet storage Ljava/util/BitSet;
+accessible method net/minecraft/util/shape/BitSetVoxelSet getIndex (III)I
+accessible field net/minecraft/util/shape/BitSetVoxelSet minX I
+accessible field net/minecraft/util/shape/BitSetVoxelSet minY I
+accessible field net/minecraft/util/shape/BitSetVoxelSet minZ I
+accessible field net/minecraft/util/shape/BitSetVoxelSet maxX I
+accessible field net/minecraft/util/shape/BitSetVoxelSet maxY I
+accessible field net/minecraft/util/shape/BitSetVoxelSet maxZ I
+accessible field net/minecraft/util/shape/SimplePairList minValues [I
+accessible field net/minecraft/util/shape/SimplePairList maxValues [I
