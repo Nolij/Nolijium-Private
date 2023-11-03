@@ -97,13 +97,10 @@ public class BitSetVoxelSetCombiner {
 
     private static boolean inBoundsAndContains(BitSetVoxelSet shape, long[] arr, int x, int y, int z) {
         // TODO broken compared to original method
-        if(x < 0 || y < 0 || z < 0)
+        if(x < 0 || y < 0 || z < 0 || x >= shape.getXSize() || y >= shape.getYSize() || z >= shape.getZSize())
             return false;
         int idx = shape.getIndex(x, y, z);
-        int arIdx = idx >> 6;
-        if(arIdx < arr.length)
-            return (arr[arIdx] & (1L << idx)) != 0;
-        return false;
+        return (arr[idx >> 6] & (1L << idx)) != 0;
     }
 
     private boolean processZ(int x1, int x2, int y1, int y2) {
