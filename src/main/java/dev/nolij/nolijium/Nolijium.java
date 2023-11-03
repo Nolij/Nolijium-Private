@@ -21,7 +21,7 @@ public class Nolijium implements ModInitializer {
 				NolijiumVoxelShapeStressor.stress();
 			}
 			LOGGER.info("Stress finished in {}s!", (System.currentTimeMillis() - startTime) / 1000D);
-			//System.exit(0);
+			System.exit(0);
 		}
 	}
 	

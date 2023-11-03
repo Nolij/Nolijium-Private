@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BitSetVoxelSet.class)
 public class BitSetVoxelSetMixin {
 	
-	/**
-	 * @author	Nolij
-	 * @reason	the old code is bad lol
-	 */
 	@Inject(method = "combine", at = @At("HEAD"), cancellable = true)
 	private static void combineFast(VoxelSet first, VoxelSet second, PairList xPoints, PairList yPoints, PairList zPoints, BooleanBiFunction function, CallbackInfoReturnable<BitSetVoxelSet> cir) {
-		if(first instanceof BitSetVoxelSet firstB && second instanceof BitSetVoxelSet secondB && xPoints instanceof SimplePairList && yPoints instanceof SimplePairList && zPoints instanceof SimplePairList) {
+		if (first instanceof BitSetVoxelSet firstB && 
+			second instanceof BitSetVoxelSet secondB && 
+			xPoints instanceof SimplePairList && 
+			yPoints instanceof SimplePairList && 
+			zPoints instanceof SimplePairList) {
 			cir.setReturnValue(new BitSetVoxelSetCombiner(firstB, secondB, xPoints, yPoints, zPoints, function).getResult());
 		}
 	}

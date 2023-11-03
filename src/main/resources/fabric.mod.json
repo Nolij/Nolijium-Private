@@ -5,7 +5,8 @@
 	"name": "Nolijium",
 	"description": "",
 	"authors": [
-		"Nolij (@xdMatthewbx#1337)"
+		"Nolij (@xdMatthewbx#1337)",
+		"embeddedt"
 	],
 	"contact": {
 		"repo": "https://github.com/Nolij/Nolijium"
@@ -14,9 +15,6 @@
 	"icon": "assets/nolijium/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"client": [
-			"dev.nolij.nolijium.client.NolijiumClient"
-		],
 		"main": [
 			"dev.nolij.nolijium.Nolijium"
 		]

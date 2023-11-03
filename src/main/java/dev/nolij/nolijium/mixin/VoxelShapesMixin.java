@@ -11,7 +11,7 @@ public class VoxelShapesMixin {
 	
 	/**
 	 * @author	Nolij
-	 * @reason	testing
+	 * @reason	Optimization requires SimplePairLists
 	 */
 	@Overwrite
 	@VisibleForTesting
