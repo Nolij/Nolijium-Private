@@ -17,11 +17,11 @@ public class Nolijium implements ModInitializer {
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			LOGGER.info("Beginning stress test...");
 			final long startTime = System.currentTimeMillis();
-//			for (var i = 0; i < 1000; i++) {
+			for (var i = 0; i < 1000; i++) {
 				NolijiumVoxelShapeStressor.stress();
-//			}
+			}
 			LOGGER.info("Stress finished in {}s!", (System.currentTimeMillis() - startTime) / 1000D);
-			System.exit(0);
+			//System.exit(0);
 		}
 	}
 	
