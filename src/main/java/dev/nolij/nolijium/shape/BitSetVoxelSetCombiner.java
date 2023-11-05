@@ -14,20 +14,17 @@ import java.util.BitSet;
 public class BitSetVoxelSetCombiner {
     private final SimplePairList xPoints, yPoints, zPoints;
     private final BooleanBiFunction function;
-    private final BitSetVoxelSet first, second;
-    private final BitSetVoxelSet destination;
+	private final BitSetVoxelSet destination;
     private final long[] destinationBits;
-    private final long[] firstWords, secondWords;
+    private final BitSetVoxelWrapper firstWrapper, secondWrapper;
     
     public BitSetVoxelSetCombiner(BitSetVoxelSet first, BitSetVoxelSet second, PairList xPoints, PairList yPoints, PairList zPoints, BooleanBiFunction function) {
-        this.first = first;
-        this.second = second;
-        this.xPoints = (SimplePairList) xPoints;
+	    this.xPoints = (SimplePairList) xPoints;
         this.yPoints = (SimplePairList) yPoints;
         this.zPoints = (SimplePairList) zPoints;
         this.function = function;
-        this.firstWords = getBitSetWords(this.first.storage);
-        this.secondWords = getBitSetWords(this.second.storage);
+        this.firstWrapper = new BitSetVoxelWrapper(first);
+        this.secondWrapper = new BitSetVoxelWrapper(second);
         final BitSetVoxelSet bitSetVoxelSet = new BitSetVoxelSet(xPoints.size() - 1, yPoints.size() - 1, zPoints.size() - 1);
         this.destinationBits = getBitSetWords(bitSetVoxelSet.storage);
         bitSetVoxelSet.minX = Integer.MAX_VALUE;
@@ -38,6 +35,32 @@ public class BitSetVoxelSetCombiner {
         bitSetVoxelSet.maxZ = Integer.MIN_VALUE;
         this.destination = bitSetVoxelSet;
     }
+	
+	static class BitSetVoxelWrapper {
+		private final long[] words;
+		private final int sizeX, sizeY, sizeZ;
+		
+		BitSetVoxelWrapper(long[] words, int sizeX, int sizeY, int sizeZ) {
+			this.words = words;
+			this.sizeX = sizeX;
+			this.sizeY = sizeY;
+			this.sizeZ = sizeZ;
+		}
+		
+		BitSetVoxelWrapper(BitSetVoxelSet shape) {
+			this(getBitSetWords(shape.storage), shape.sizeX, shape.sizeY, shape.sizeZ);
+		}
+		
+		boolean inBoundsAndContains(int x, int y, int z) {
+			if (x < 0 || y < 0 || z < 0 ||
+				x >= sizeX || y >= sizeY || z >= sizeZ)
+				return false;
+			
+			int idx = (x * sizeY + y) * sizeZ + z;
+			
+			return (words[idx >> 6] & (1L << idx)) != 0;
+		}
+	}
     
     private static final MethodHandle WORDS, WORDS_IN_USE, RECALCULATE_WORDS;
     private static final Unsafe UNSAFE;
@@ -96,15 +119,6 @@ public class BitSetVoxelSetCombiner {
         }
         return changed;
     }
-    
-    private static boolean inBoundsAndContains(BitSetVoxelSet shape, long[] arr, int x, int y, int z) {
-        if (x < 0 || y < 0 || z < 0 ||
-            x >= shape.sizeX || y >= shape.sizeY || z >= shape.sizeZ)
-            return false;
-        
-        int idx = shape.getIndex(x, y, z);
-        return (arr[idx >> 6] & (1L << idx)) != 0;
-    }
 	
 	private int destinationIndex = 0;
     private boolean processZ(int x1, int x2, int y1, int y2) {
@@ -124,11 +138,11 @@ public class BitSetVoxelSetCombiner {
 			final boolean conditionOutput;
 			
 			if (isOr) {
-				conditionOutput = inBoundsAndContains(first, firstWords, x1, y1, z1) || inBoundsAndContains(second,
-					secondWords, x2, y2, z2);
+				conditionOutput =
+					firstWrapper.inBoundsAndContains(x1, y1, z1) || secondWrapper.inBoundsAndContains(x2, y2, z2);
 			} else 
-				conditionOutput = function.apply(inBoundsAndContains(first, firstWords, x1, y1, z1),
-					inBoundsAndContains(second, secondWords, x2, y2, z2));
+				conditionOutput = function.apply(firstWrapper.inBoundsAndContains(x1, y1, z1),
+					secondWrapper.inBoundsAndContains(x2, y2, z2));
             
             if (conditionOutput) {
                 //destination.storage.set(destinationIndex);
