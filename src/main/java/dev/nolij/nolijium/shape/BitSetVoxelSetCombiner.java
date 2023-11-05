@@ -78,10 +78,14 @@ public class BitSetVoxelSetCombiner {
     
     private boolean processY(int x1, int x2) {
         var changed = false;
+		
+		var maxIndexExclusive = yPoints.size() - 1;
+		var minValues = yPoints.minValues;
+		var maxValues = yPoints.maxValues;
         
-        for (int yIndex = 0; yIndex < yPoints.size() - 1; yIndex++) {
-            final int y1 = yPoints.minValues[yIndex];
-            final int y2 = yPoints.maxValues[yIndex];
+        for (int yIndex = 0; yIndex < maxIndexExclusive; yIndex++) {
+            final int y1 = minValues[yIndex];
+            final int y2 = maxValues[yIndex];
             
             if (processZ(x1, x2, y1, y2)) {
                 destination.minY = Math.min(destination.minY, yIndex);
@@ -105,10 +109,14 @@ public class BitSetVoxelSetCombiner {
 	private int destinationIndex = 0;
     private boolean processZ(int x1, int x2, int y1, int y2) {
         var setY = false;
+	    
+	    var maxIndexExclusive = zPoints.size() - 1;
+	    var minValues = zPoints.minValues;
+	    var maxValues = zPoints.maxValues;
         
-        for (int zIndex = 0; zIndex < zPoints.size() - 1; zIndex++) {
-            final int z1 = zPoints.minValues[zIndex];
-            final int z2 = zPoints.maxValues[zIndex];
+        for (int zIndex = 0; zIndex < maxIndexExclusive; zIndex++) {
+            final int z1 = minValues[zIndex];
+            final int z2 = maxValues[zIndex];
             
             if (function.apply(inBoundsAndContains(first, firstWords, x1, y1, z1), inBoundsAndContains(second, secondWords, x2, y2, z2))) {
                 //destination.storage.set(destinationIndex);
@@ -128,9 +136,13 @@ public class BitSetVoxelSetCombiner {
     }
     
     public BitSetVoxelSet getResult() {
-        for (int xIndex = 0; xIndex < xPoints.size() - 1; xIndex++) {
-            final int x1 = xPoints.minValues[xIndex];
-            final int x2 = xPoints.maxValues[xIndex];
+	    var maxIndexExclusive = xPoints.size() - 1;
+	    var minValues = xPoints.minValues;
+	    var maxValues = xPoints.maxValues;
+		
+        for (int xIndex = 0; xIndex < maxIndexExclusive; xIndex++) {
+            final int x1 = minValues[xIndex];
+            final int x2 = maxValues[xIndex];
             
             if (processY(x1, x2)) {
                 destination.minX = Math.min(destination.minX, xIndex);
