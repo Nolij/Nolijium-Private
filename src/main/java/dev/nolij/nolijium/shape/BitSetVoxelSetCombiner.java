@@ -113,12 +113,24 @@ public class BitSetVoxelSetCombiner {
 	    var maxIndexExclusive = zPoints.size() - 1;
 	    var minValues = zPoints.minValues;
 	    var maxValues = zPoints.maxValues;
+		
+		var function = this.function;
+		var isOr = function == BooleanBiFunction.OR;
         
         for (int zIndex = 0; zIndex < maxIndexExclusive; zIndex++) {
             final int z1 = minValues[zIndex];
             final int z2 = maxValues[zIndex];
+			
+			final boolean conditionOutput;
+			
+			if (isOr) {
+				conditionOutput = inBoundsAndContains(first, firstWords, x1, y1, z1) || inBoundsAndContains(second,
+					secondWords, x2, y2, z2);
+			} else 
+				conditionOutput = function.apply(inBoundsAndContains(first, firstWords, x1, y1, z1),
+					inBoundsAndContains(second, secondWords, x2, y2, z2));
             
-            if (function.apply(inBoundsAndContains(first, firstWords, x1, y1, z1), inBoundsAndContains(second, secondWords, x2, y2, z2))) {
+            if (conditionOutput) {
                 //destination.storage.set(destinationIndex);
                 destinationBits[(destinationIndex >> 6)] |= (1L << destinationIndex);
                 //destination.storage.set(destinationIndex);
