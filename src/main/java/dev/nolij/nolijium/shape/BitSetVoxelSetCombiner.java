@@ -12,16 +12,16 @@ import java.lang.reflect.Field;
 import java.util.BitSet;
 
 public class BitSetVoxelSetCombiner {
-    private final SimplePairList xPoints, yPoints, zPoints;
+    private final NolijPairList xPoints, yPoints, zPoints;
     private final BooleanBiFunction function;
 	private final BitSetVoxelSet destination;
     private final long[] destinationBits;
     private final BitSetVoxelWrapper firstWrapper, secondWrapper;
     
     public BitSetVoxelSetCombiner(BitSetVoxelSet first, BitSetVoxelSet second, PairList xPoints, PairList yPoints, PairList zPoints, BooleanBiFunction function) {
-	    this.xPoints = (SimplePairList) xPoints;
-        this.yPoints = (SimplePairList) yPoints;
-        this.zPoints = (SimplePairList) zPoints;
+	    this.xPoints = new NolijPairList(xPoints);
+        this.yPoints = new NolijPairList(yPoints);
+        this.zPoints = new NolijPairList(zPoints);
         this.function = function;
         this.firstWrapper = new BitSetVoxelWrapper(first);
         this.secondWrapper = new BitSetVoxelWrapper(second);
@@ -59,6 +59,34 @@ public class BitSetVoxelSetCombiner {
 			int idx = (x * sizeY + y) * sizeZ + z;
 			
 			return (words[idx >> 6] & (1L << idx)) != 0;
+		}
+	}
+	
+	static class NolijPairList {
+		final int size;
+		final int[] minValues;
+		final int[] maxValues;
+		
+		NolijPairList(PairList list) {
+			size = list.size();
+			if(list instanceof SimplePairList simpleList) {
+				minValues = simpleList.minValues;
+				maxValues = simpleList.maxValues;
+			} else {
+				// TODO validate that this path is correct
+				minValues = new int[size + 1];
+				maxValues = new int[size + 1];
+				list.forEachPair(new PairList.Consumer() {
+					int i = 0;
+					@Override
+					public boolean merge(int x, int y, int index) {
+						minValues[i] = x;
+						maxValues[i] = y;
+						i++;
+						return true;
+					}
+				});
+			}
 		}
 	}
     
@@ -102,7 +130,7 @@ public class BitSetVoxelSetCombiner {
     private boolean processY(int x1, int x2) {
         var changed = false;
 		
-		var maxIndexExclusive = yPoints.size() - 1;
+		var maxIndexExclusive = yPoints.size - 1;
 		var minValues = yPoints.minValues;
 		var maxValues = yPoints.maxValues;
         
@@ -124,7 +152,7 @@ public class BitSetVoxelSetCombiner {
     private boolean processZ(int x1, int x2, int y1, int y2) {
         var setY = false;
 	    
-	    var maxIndexExclusive = zPoints.size() - 1;
+	    var maxIndexExclusive = zPoints.size - 1;
 	    var minValues = zPoints.minValues;
 	    var maxValues = zPoints.maxValues;
 		
@@ -162,7 +190,7 @@ public class BitSetVoxelSetCombiner {
     }
     
     public BitSetVoxelSet getResult() {
-	    var maxIndexExclusive = xPoints.size() - 1;
+	    var maxIndexExclusive = xPoints.size - 1;
 	    var minValues = xPoints.minValues;
 	    var maxValues = xPoints.maxValues;
 		
