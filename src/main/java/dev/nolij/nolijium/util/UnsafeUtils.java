@@ -4,11 +4,13 @@ import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
-import java.util.BitSet;
 
 public class UnsafeUtils {
+	
 	private static final Unsafe UNSAFE;
+	
 	private static final MethodHandles.Lookup INTERNAL_LOOKUP;
+	
 	static {
 		try {
 			final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
@@ -26,4 +28,5 @@ public class UnsafeUtils {
 	public static MethodHandles.Lookup implLookup() {
 		return INTERNAL_LOOKUP;
 	}
+	
 }

@@ -10,6 +10,7 @@ import java.lang.invoke.MethodHandle;
 import java.util.BitSet;
 
 public class BitSetVoxelSetCombiner {
+	
     private final NolijPairList xPoints, yPoints, zPoints;
     private final BooleanBiFunction function;
 	private final BitSetVoxelSet destination;
@@ -35,6 +36,7 @@ public class BitSetVoxelSetCombiner {
     }
 	
 	static class BitSetVoxelWrapper {
+		
 		private final long[] words;
 		private final int sizeX, sizeY, sizeZ;
 		
@@ -58,9 +60,11 @@ public class BitSetVoxelSetCombiner {
 			
 			return (words[idx >> 6] & (1L << idx)) != 0;
 		}
+		
 	}
 	
 	static class NolijPairList {
+		
 		final int size;
 		final int[] minValues;
 		final int[] maxValues;
@@ -85,6 +89,7 @@ public class BitSetVoxelSetCombiner {
 				});
 			}
 		}
+		
 	}
     
     private static final MethodHandle WORDS, WORDS_IN_USE, RECALCULATE_WORDS;
@@ -201,4 +206,5 @@ public class BitSetVoxelSetCombiner {
         
         return destination;
     }
+	
 }
