@@ -69,11 +69,10 @@ public class BitSetVoxelSetCombiner {
 		
 		NolijPairList(PairList list) {
 			size = list.size();
-			if(list instanceof SimplePairList simpleList) {
+			if (list instanceof SimplePairList simpleList) {
 				minValues = simpleList.minValues;
 				maxValues = simpleList.maxValues;
 			} else {
-				// TODO validate that this path is correct
 				minValues = new int[size + 1];
 				maxValues = new int[size + 1];
 				list.forEachPair(new PairList.Consumer() {

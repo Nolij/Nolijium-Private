@@ -4,8 +4,7 @@
   "package": "dev.nolij.nolijium.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BitSetVoxelSetMixin",
-    "VoxelShapesMixin"
+    "BitSetVoxelSetMixin"
   ],
   "client": [
   ],
