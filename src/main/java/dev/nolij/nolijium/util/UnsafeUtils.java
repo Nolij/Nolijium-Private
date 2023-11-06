@@ -15,8 +15,8 @@ public class UnsafeUtils {
 			unsafeField.setAccessible(true);
 			UNSAFE = (Unsafe) unsafeField.get(null);
 			final Field hackfield = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-			@SuppressWarnings("deprecation") long fieldOffset = UNSAFE.staticFieldOffset(hackfield);
-			@SuppressWarnings("deprecation") Object fieldBase = UNSAFE.staticFieldBase(hackfield);
+			@SuppressWarnings("deprecation") var fieldOffset = UNSAFE.staticFieldOffset(hackfield);
+			@SuppressWarnings("deprecation") var fieldBase = UNSAFE.staticFieldBase(hackfield);
 			INTERNAL_LOOKUP = (MethodHandles.Lookup) UNSAFE.getObject(fieldBase, fieldOffset);
 		} catch (Throwable e) {
 			throw new AssertionError(e);
