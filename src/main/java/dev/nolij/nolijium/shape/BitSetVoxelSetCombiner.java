@@ -1,14 +1,12 @@
 package dev.nolij.nolijium.shape;
 
+import dev.nolij.nolijium.util.UnsafeUtils;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.shape.BitSetVoxelSet;
 import net.minecraft.util.shape.PairList;
 import net.minecraft.util.shape.SimplePairList;
-import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
 import java.util.BitSet;
 
 public class BitSetVoxelSetCombiner {
@@ -90,20 +88,12 @@ public class BitSetVoxelSetCombiner {
 	}
     
     private static final MethodHandle WORDS, WORDS_IN_USE, RECALCULATE_WORDS;
-    private static final Unsafe UNSAFE;
     
     static {
         try {
-            final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            UNSAFE = (Unsafe) unsafeField.get(null);
-            final Field hackfield = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-            @SuppressWarnings("deprecation") long fieldOffset = UNSAFE.staticFieldOffset(hackfield);
-            @SuppressWarnings("deprecation") Object fieldBase = UNSAFE.staticFieldBase(hackfield);
-            final MethodHandles.Lookup hack = (MethodHandles.Lookup) UNSAFE.getObject(fieldBase, fieldOffset);
-            WORDS = hack.unreflectGetter(BitSet.class.getDeclaredField("words"));
-            WORDS_IN_USE = hack.unreflectSetter(BitSet.class.getDeclaredField("wordsInUse"));
-            RECALCULATE_WORDS = hack.unreflect(BitSet.class.getDeclaredMethod("recalculateWordsInUse"));
+            WORDS = UnsafeUtils.implLookup().unreflectGetter(BitSet.class.getDeclaredField("words"));
+            WORDS_IN_USE = UnsafeUtils.implLookup().unreflectSetter(BitSet.class.getDeclaredField("wordsInUse"));
+            RECALCULATE_WORDS = UnsafeUtils.implLookup().unreflect(BitSet.class.getDeclaredMethod("recalculateWordsInUse"));
         } catch (Throwable e) {
             throw new AssertionError(e);
         }
